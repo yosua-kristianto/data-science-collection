@@ -1,0 +1,181 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"},{"aliases":[],"languageName":"fsharp","name":"fsharp"}]}}
+
+#!markdown
+
+# Simple Linear Regression using F#
+
+This SLR case based on ML.NET guide about the price predicting by [Microsoft Learn](https://learn.microsoft.com/en-us/dotnet/machine-learning/tutorials/predict-prices). 
+
+#!fsharp
+
+printfn "Ensuring that the kernel is working";
+
+#!markdown
+
+## Installing Microsoft ML package
+
+This package below can be found in this link below:
+https://www.nuget.org/packages/Microsoft.ML/3.0.0-preview.23511.1
+
+This 
+
+#!fsharp
+
+#r "nuget:Microsoft.ML"
+
+#!fsharp
+
+// Import library
+open Microsoft.ML;
+open Microsoft.ML.Data;
+open FSharp.Core;
+open Microsoft.ML.Transforms;
+
+#!markdown
+
+## Creating data model
+
+This part is creating model of the prediction data for the Taxi Trip and the taxi trip price prediction
+
+#!fsharp
+
+type TaxiTrip() = 
+    [<LoadColumn(0)>]
+    member val VendorId: string = "" with get, set
+
+    [<LoadColumn(1)>]
+    member val RateCode: string = "" with get, set
+    
+    [<LoadColumn(2)>]
+    member val PassengerCount: float = 0.0 with get, set
+    
+    [<LoadColumn(3)>]
+    member val TripTime: float = 0.0 with get, set
+    
+    [<LoadColumn(4)>]
+    member val TripDistance: float = 0.0 with get, set
+    
+    [<LoadColumn(5)>]
+    member val PaymentType: string = "" with get, set
+    
+    [<LoadColumn(6)>]
+    member val FareAmount: float = 0.0 with get, set
+
+type TaxiTripFarePrediction() =
+    [<ColumnName("Score")>]
+    member val FareAmount: Single = 0.0f with get, set
+
+    member this.Score =
+        this.FareAmount
+
+#!markdown
+
+## Downloading the dataset (Optional if you had the file already)
+The dataset was taken from dotnet's repository below:
+https://github.com/dotnet/machinelearning/blob/main
+
+#!fsharp
+
+open System.Net.Http;
+open System.IO;
+
+let DownloadTrainTestFiles() = 
+    async {
+        let urlToBeFetched = 
+            [| 
+            "test.csv" 
+            "https://github.com/dotnet/machinelearning/raw/main/test/data/taxi-fare-test.csv"
+            "train.csv"
+            "https://github.com/dotnet/machinelearning/raw/main/test/data/taxi-fare-train.csv" 
+            |]
+
+        
+        let service = new HttpClient();
+
+        for i in 0 .. 2 .. 3 do
+            let file = File.OpenWrite(urlToBeFetched.[i]);
+            let! response = Async.AwaitTask(service.GetStreamAsync(urlToBeFetched.[i+1]));
+            do! Async.AwaitTask(response.CopyToAsync(file));
+            printfn "The download process of %s is completed" urlToBeFetched.[i] 
+    }
+
+let promises = Async.RunSynchronously(DownloadTrainTestFiles());
+
+#!markdown
+
+## Building Machine Learning Model
+
+Step to be followed:
+1. Make MLContext
+2. Create dataview of the train data
+3. Build a training pipeline for the model
+4. Fit the model 
+
+#!fsharp
+
+let mlContext = new MLContext(seed=0);
+
+// Generate dataview
+let dataview = mlContext.Data.LoadFromTextFile<TaxiTrip>("train.csv", hasHeader = true, separatorChar = ',');
+
+let pipeline = EstimatorChain()
+                .Append(mlContext.Transforms.CopyColumns(outputColumnName="Label", inputColumnName="FareAmount"))
+
+                // One-Hot Encoding
+                .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName="VendorIdEncoded", inputColumnName="VendorId"))
+                .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName="RateCodeEncoded", inputColumnName="RateCode"))
+                .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName="PaymentTypeEncoded", inputColumnName="PaymentType"))
+
+                // Convert PassengerCount, TripDistance, and Label to float before concatenation
+                .Append(mlContext.Transforms.Conversion.ConvertType("PassengerCount", "PassengerCount", DataKind.Single))
+                .Append(mlContext.Transforms.Conversion.ConvertType("TripDistance", "TripDistance", DataKind.Single))
+                .Append(mlContext.Transforms.Conversion.ConvertType("Label", "Label", DataKind.Single))
+                
+                // Map features
+                .Append(mlContext.Transforms.Concatenate("Features", "VendorIdEncoded", "RateCodeEncoded", "PassengerCount", "TripDistance", "PaymentTypeEncoded"))
+
+                // Setup ML Algo
+                .Append(mlContext.Regression.Trainers.LbfgsPoissonRegression())
+
+// Fit Model
+let model = pipeline.Fit(dataview)
+
+#!fsharp
+
+let testDataView = mlContext.Data.LoadFromTextFile<TaxiTrip>("test.csv", hasHeader = true, separatorChar = ',');
+let predictions = model.Transform(testDataView);
+
+let metrics = mlContext.Regression.Evaluate(predictions, "Label", "Score");
+
+printfn "";
+printfn "*************************************************";
+printfn "        Model quality metrics evaluation         ";
+printfn "*************************************************";
+
+printfn "MSE: %f" metrics.MeanSquaredError;
+
+#!fsharp
+
+let taxiTripSample: TaxiTrip = new TaxiTrip();
+taxiTripSample.VendorId <- "VTS";
+taxiTripSample.RateCode <- "1";
+taxiTripSample.PassengerCount <- 1.0;
+taxiTripSample.TripTime <- 1140.0;
+taxiTripSample.TripDistance <- 3.75;
+taxiTripSample.PaymentType <- "CRD";
+taxiTripSample.FareAmount <- 0.0;
+
+let predictionFunction = mlContext.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(model);
+
+let prediction = predictionFunction.Predict(taxiTripSample);
+
+printfn "*************************************************";
+printfn "               Prediction result                 ";
+printfn "*************************************************";
+printfn "*                                               *";
+printfn "*                                               *";
+printfn "            %f , actual fare: 15.5          " prediction.FareAmount;
+printfn "*                                               *";
+printfn "*                                               *";
