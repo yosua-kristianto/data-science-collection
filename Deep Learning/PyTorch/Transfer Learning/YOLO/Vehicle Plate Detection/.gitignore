@@ -1,0 +1,4 @@
+/.venv
+/.vscode
+/runs
+yolov8n.pt

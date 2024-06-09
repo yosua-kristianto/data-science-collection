@@ -1,0 +1,12 @@
+path: 'path\\to\\bda-team-yolo-code\\our-own-training-set' # dataset root dir
+train: train/images  # train images (relative to 'path')
+val: train/images  # train images (relative to 'path')
+test: test/images  # val images (relative to 'path')
+
+train_labels: train/labels
+val_labels: train/labels
+test_labels: test/labels
+
+# Classes
+names:
+  0: vehicle registration plate

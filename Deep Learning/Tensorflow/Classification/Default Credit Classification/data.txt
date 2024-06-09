@@ -1,0 +1,499 @@
+====================================================================================
+8
+141/141 [==============================] - 0s 3ms/step - loss: 0.4566 - accuracy: 0.8271
+Loss:  0.4565712809562683  Accuracy:  0.8271111249923706
+====================================================================================
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ dense (Dense)               (None, 512)               35328     
+                                                                 
+ activation (Activation)     (None, 512)               0         
+                                                                 
+ batch_normalization (Batch  (None, 512)               2048      
+ Normalization)                                                  
+                                                                 
+ dropout (Dropout)           (None, 512)               0         
+                                                                 
+ dense_1 (Dense)             (None, 256)               131328    
+                                                                 
+ activation_1 (Activation)   (None, 256)               0         
+                                                                 
+ batch_normalization_1 (Bat  (None, 256)               1024      
+ chNormalization)                                                
+                                                                 
+ dropout_1 (Dropout)         (None, 256)               0         
+                                                                 
+ dense_2 (Dense)             (None, 256)               65792     
+                                                                 
+ activation_2 (Activation)   (None, 256)               0         
+                                                                 
+ batch_normalization_2 (Bat  (None, 256)               1024      
+ chNormalization)                                                
+                                                                 
+ dropout_2 (Dropout)         (None, 256)               0         
+                                                                 
+ dense_3 (Dense)             (None, 128)               32896     
+                                                                 
+ batch_normalization_3 (Bat  (None, 128)               512       
+ chNormalization)                                                
+                                                                 
+ dropout_3 (Dropout)         (None, 128)               0         
+                                                                 
+ dense_4 (Dense)             (None, 64)                8256      
+                                                                 
+ activation_3 (Activation)   (None, 64)                0         
+                                                                 
+ batch_normalization_4 (Bat  (None, 64)                256       
+ chNormalization)                                                
+                                                                 
+ dropout_4 (Dropout)         (None, 64)                0         
+                                                                 
+ dense_5 (Dense)             (None, 64)                4160      
+                                                                 
+ activation_4 (Activation)   (None, 64)                0         
+                                                                 
+ batch_normalization_5 (Bat  (None, 64)                256       
+ chNormalization)                                                
+                                                                 
+ dropout_5 (Dropout)         (None, 64)                0         
+                                                                 
+ dense_6 (Dense)             (None, 32)                2080      
+                                                                 
+ activation_5 (Activation)   (None, 32)                0         
+                                                                 
+ batch_normalization_6 (Bat  (None, 32)                128       
+ chNormalization)                                                
+                                                                 
+ dropout_6 (Dropout)         (None, 32)                0         
+                                                                 
+ dense_7 (Dense)             (None, 1)                 33        
+                                                                 
+=================================================================
+Total params: 285121 (1.09 MB)
+Trainable params: 282497 (1.08 MB)
+Non-trainable params: 2624 (10.25 KB)
+
+
+  # Hyperparameters
+    def input_layer(self):
+        return keras.layers.InputLayer(input_shape = (68,)); # 11 is total features dimension
+
+    def hidden_layer(self):
+        return [
+            keras.layers.Dense(512, kernel_initializer = "glorot_uniform", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-4), activity_regularizer = tensorflow.keras.regularizers.l2(1e-4)),
+            keras.layers.Activation("sigmoid"),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(0.8),
+
+            keras.layers.Dense(256, kernel_initializer = "glorot_uniform", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-4), activity_regularizer = tensorflow.keras.regularizers.l2(1e-4)),
+            keras.layers.Activation("sigmoid"),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(0.5),
+
+            keras.layers.Dense(256, kernel_initializer = "glorot_uniform", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-4), activity_regularizer = tensorflow.keras.regularizers.l2(1e-4)),
+            keras.layers.Activation("sigmoid"),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(0.5),
+
+            keras.layers.Dense(128, kernel_initializer = "glorot_uniform", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-4), activity_regularizer = tensorflow.keras.regularizers.l2(1e-4)),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(0.5),
+        ];
+
+    def shallow_hidden_layer(self):
+        return [
+            keras.layers.Dense(64, kernel_initializer = "glorot_uniform", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-4)),
+            keras.layers.Activation("sigmoid"),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(0.5),
+
+            keras.layers.Dense(64, kernel_initializer = "glorot_uniform", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-4)),
+            keras.layers.Activation("sigmoid"),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(0.5),
+
+            keras.layers.Dense(32, kernel_initializer = "glorot_uniform", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-3)),
+            keras.layers.Activation("sigmoid"),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(0.5),
+        ];
+
+    def output_layer(self):
+        return keras.layers.Dense(1, kernel_initializer = "glorot_uniform", activation = "sigmoid"); # Since output is only 1 label.
+
+    def optimizer(self):
+        return keras.optimizers.Adam(learning_rate = 1e-3);
+
+    def loss(self):
+        return "binary_crossentropy";
+
+    def metrics(self):
+        return "accuracy";
+
+    def epoch(self):
+        return 1000;
+
+
+====================================================================================
+
+
+
+
+====================================================================================
+7
+140/140 [==============================] - 1s 4ms/step - loss: 0.4626 - accuracy: 0.8177
+Loss:  0.46263524889945984  Accuracy:  0.8177118301391602
+====================================================================================
+
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ dense_71 (Dense)            (None, 256)               17920     
+                                                                 
+ activation_23 (Activation)  (None, 256)               0         
+                                                                 
+ batch_normalization_57 (Ba  (None, 256)               1024      
+ tchNormalization)                                               
+                                                                 
+ dropout_47 (Dropout)        (None, 256)               0         
+                                                                 
+ dense_72 (Dense)            (None, 256)               65792     
+                                                                 
+ activation_24 (Activation)  (None, 256)               0         
+                                                                 
+ batch_normalization_58 (Ba  (None, 256)               1024      
+ tchNormalization)                                               
+                                                                 
+ dropout_48 (Dropout)        (None, 256)               0         
+                                                                 
+ dense_73 (Dense)            (None, 128)               32896     
+                                                                 
+ batch_normalization_59 (Ba  (None, 128)               512       
+ tchNormalization)                                               
+                                                                 
+ dropout_49 (Dropout)        (None, 128)               0         
+                                                                 
+ dense_74 (Dense)            (None, 64)                8256      
+                                                                 
+ batch_normalization_60 (Ba  (None, 64)                256       
+ tchNormalization)                                               
+                                                                 
+ dropout_50 (Dropout)        (None, 64)                0         
+                                                                 
+ dense_75 (Dense)            (None, 64)                4160      
+                                                                 
+ batch_normalization_61 (Ba  (None, 64)                256       
+ tchNormalization)                                               
+                                                                 
+ dropout_51 (Dropout)        (None, 64)                0         
+                                                                 
+ dense_76 (Dense)            (None, 32)                2080      
+                                                                 
+ batch_normalization_62 (Ba  (None, 32)                128       
+ tchNormalization)                                               
+                                                                 
+ dropout_52 (Dropout)        (None, 32)                0         
+                                                                 
+ dense_77 (Dense)            (None, 1)                 33        
+                                                                 
+=================================================================
+
+
+# Hyperparameters
+    def input_layer(self):
+        return keras.layers.InputLayer(input_shape = (69,)); # 11 is total features dimension
+
+    def hidden_layer(self):
+        return [
+            keras.layers.Dense(256, kernel_initializer = "glorot_uniform", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-4)),
+            keras.layers.Activation("sigmoid"),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(0.5),
+            
+            keras.layers.Dense(256, kernel_initializer = "glorot_uniform", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-4)),
+            keras.layers.Activation("sigmoid"),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(0.5),
+            
+            keras.layers.Dense(128, kernel_initializer = "glorot_uniform", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-4)),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(0.5),
+        ];
+
+    def shallow_hidden_layer(self):
+        return [
+            keras.layers.Dense(64, kernel_initializer = "glorot_uniform", activation = "sigmoid"),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(0.5),
+            keras.layers.Dense(64, kernel_initializer = "glorot_uniform", activation = "sigmoid"),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(0.5),
+            keras.layers.Dense(32, kernel_initializer = "glorot_uniform", activation = "sigmoid"),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(0.5),
+        ];
+
+    def output_layer(self):
+        return keras.layers.Dense(1, kernel_initializer = "glorot_uniform", activation = "sigmoid"); # Since output is only 1 label.
+
+    def optimizer(self):
+        return keras.optimizers.Adam(learning_rate = 1e-3);
+
+    def loss(self):
+        return "binary_crossentropy";
+
+    def metrics(self):
+        return "accuracy";
+
+    def epoch(self):
+        return 1000;
+
+
+
+====================================================================================
+
+
+
+====================================================================================
+6
+2024/01/20 01:21
+140/140 [==============================] - 1s 5ms/step - loss: 0.4580 - accuracy: 0.8152
+Loss:  0.4580429196357727  Accuracy:  0.8152393698692322
+====================================================================================
+Model: "sequential_65"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ dense_384 (Dense)           (None, 128)               8960      
+                                                                 
+ activation_79 (Activation)  (None, 128)               0         
+                                                                 
+ batch_normalization_5 (Bat  (None, 128)               512       
+ chNormalization)                                                
+                                                                 
+ dense_385 (Dense)           (None, 64)                8256      
+                                                                 
+ batch_normalization_6 (Bat  (None, 64)                256       
+ chNormalization)                                                
+                                                                 
+ dropout_3 (Dropout)         (None, 64)                0         
+                                                                 
+ dense_386 (Dense)           (None, 64)                4160      
+                                                                 
+ batch_normalization_7 (Bat  (None, 64)                256       
+ chNormalization)                                                
+                                                                 
+ dropout_4 (Dropout)         (None, 64)                0         
+                                                                 
+ activation_80 (Activation)  (None, 64)                0         
+                                                                 
+ dense_387 (Dense)           (None, 16)                1040      
+                                                                 
+ batch_normalization_8 (Bat  (None, 16)                64        
+ chNormalization)                                                
+                                                                 
+ dropout_5 (Dropout)         (None, 16)                0         
+                                                                 
+ dense_388 (Dense)           (None, 8)                 136       
+                                                                 
+ batch_normalization_9 (Bat  (None, 8)                 32        
+ chNormalization)                                                
+                                                                 
+ dense_389 (Dense)           (None, 1)                 9         
+                                                                 
+=================================================================
+Total params: 23681 (92.50 KB)
+Trainable params: 23121 (90.32 KB)
+Non-trainable params: 560 (2.19 KB)
+_________________________________________________________________
+
+
+
+def input_layer(self):
+        return keras.layers.InputLayer(input_shape = (69,)); # 11 is total features dimension
+
+    def hidden_layer(self):
+        return [
+            keras.layers.Dense(128, kernel_initializer = "he_normal", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-6)),
+            keras.layers.Activation("tanh"),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dense(64, kernel_initializer = "he_normal", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-5)),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(0.5),
+            keras.layers.Dense(64, activation = "tanh", kernel_initializer = "he_normal", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-3)),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(0.5),
+            keras.layers.Activation("tanh"),
+        ];
+
+    def shallow_hidden_layer(self):
+        return [
+            keras.layers.Dense(16, kernel_initializer = "he_normal", activation = "tanh"),
+            keras.layers.BatchNormalization(),
+            keras.layers.Dropout(0.5),
+            keras.layers.Dense(8, kernel_initializer = "he_normal", activation = "tanh"),
+            keras.layers.BatchNormalization(),
+        ];
+
+    def output_layer(self):
+        return keras.layers.Dense(1, activation = "sigmoid"); # Since output is only 1 label.
+
+    def optimizer(self):
+        return keras.optimizers.Adam(learning_rate = 1e-4);
+
+    def loss(self):
+        return "binary_crossentropy";
+
+    def metrics(self):
+        return "accuracy";
+
+    def epoch(self):
+        return 1000;
+
+
+====================================================================================
+
+
+
+
+====================================================================================
+5
+2024/01/24 01:21
+140/140 [==============================] - 1s 4ms/step - loss: 0.4630 - accuracy: 0.8134
+Loss:  0.46300503611564636  Accuracy:  0.8134412169456482
+====================================================================================
+def input_layer(self):
+        return keras.layers.Dense(32, input_shape = (69,), activation = "sigmoid"); # 11 is total features dimension
+
+    def hidden_layer(self):
+        return [
+            keras.layers.Dense(256, activation = "relu", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-4)),
+            keras.layers.Dense(256, activation = "relu", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-4)),
+            keras.layers.Dense(128, activation = "relu", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-6))
+        ];
+
+    def shallow_hidden_layer(self):
+        return [
+            keras.layers.Dense(64, activation = "relu"),
+            keras.layers.Dense(64, activation = "relu"),
+            keras.layers.Dense(32, activation = "relu"),
+        ];
+
+    def output_layer(self):
+        return keras.layers.Dense(1, activation = "sigmoid"); # Since output is only 1 label.
+
+    def optimizer(self):
+        return keras.optimizers.Adam(learning_rate = 1e-6);
+
+    def loss(self):
+        return "binary_crossentropy";
+
+    def metrics(self):
+        return "accuracy";
+
+    def epoch(self):
+        return 1000;
+====================================================================================
+
+
+
+
+====================================================================================
+4
+2024/01/19 23:28
+140/140 [==============================] - 1s 4ms/step - loss: 0.4681 - accuracy: 0.8168
+Loss:  0.4681284725666046  Accuracy:  0.8168127536773682
+====================================================================================
+
+def input_layer(self):
+        return keras.layers.Dense(32, input_shape = (69,), activation = "sigmoid"); # 11 is total features dimension
+
+    def hidden_layer(self):
+        return [
+            keras.layers.Dense(256, activation = "relu", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-4)),
+            keras.layers.Dense(256, activation = "relu", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-4)),
+            keras.layers.Dense(128, activation = "relu", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-6))
+        ];
+
+    def shallow_hidden_layer(self):
+        return [
+            keras.layers.Dense(64, activation = "relu"),
+            keras.layers.Dense(64, activation = "relu"),
+            keras.layers.Dense(32, activation = "relu"),
+        ];
+
+    def output_layer(self):
+        return keras.layers.Dense(1, activation = "sigmoid"); # Since output is only 1 label.
+
+    def optimizer(self):
+        return keras.optimizers.Adam(learning_rate = 1e-6);
+
+    def loss(self):
+        return "binary_crossentropy";
+
+    def metrics(self):
+        return "accuracy";
+
+    def epoch(self):
+        return 250;
+====================================================================================
+
+
+
+
+
+====================================================================================
+3
+2024/01/19 22:24
+140/140 [==============================] - 1s 4ms/step - loss: 0.4663 - accuracy: 0.8137
+Loss:  0.46628594398498535  Accuracy:  0.8136659860610962
+====================================================================================
+
+    def input_layer(self):
+        return keras.layers.Dense(32, input_dim = 69, activation = "sigmoid"); # 11 is total features dimension
+
+    def hidden_layer(self):
+        return [
+            keras.layers.Dense(256, activation = "relu", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-4)),
+            keras.layers.Dense(256, activation = "relu", kernel_regularizer = tensorflow.keras.regularizers.l2(1e-4))
+        ];
+
+    def shallow_hidden_layer(self):
+        return [
+            keras.layers.Dense(32, activation = "relu"),
+            keras.layers.Dense(32, activation = "relu"),
+            keras.layers.Dense(16, activation = "relu"),
+            keras.layers.Dense(16, activation = "relu")
+        ];
+
+    def output_layer(self):
+        return keras.layers.Dense(1, activation = "sigmoid"); # Since output is only 1 label.
+
+    def optimizer(self):
+        return keras.optimizers.Adam(learning_rate = 1e-6);
+
+    def loss(self):
+        return "binary_crossentropy";
+
+    def metrics(self):
+        return "accuracy";
+
+====================================================================================
+
+
+
+
+
+
+
+
+
+
+2024/01/19 21:37
+140/140 [==============================] - 1s 4ms/step - loss: 0.4816 - accuracy: 0.8128
+Loss:  0.48159632086753845  Accuracy:  0.8127669095993042
+
+2024/01/19 21:46
+140/140 [==============================] - 1s 3ms/step - loss: 0.5432 - accuracy: 0.8137
+Loss:  0.5432283282279968  Accuracy:  0.8136659860610962
