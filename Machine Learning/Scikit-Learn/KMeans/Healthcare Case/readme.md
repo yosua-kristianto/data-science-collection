@@ -15,3 +15,6 @@ Second, is to augment the categorical data, into numerical expression. For examp
 When I check both coorelation data, both approaches had similar coorelation results, clocking at near zero value, which increase my worry about this experimentation, about whether I should continue using this data or not. Because zero coorelation mean, as you know, can messing up the cluster and even any predictive analysis.
 
 Well, it's augmented anyway, so ya. Moving on.
+
+Reference for different evaluation metrics for Clustering:
+https://link.springer.com/article/10.1007/s12553-023-00805-8
